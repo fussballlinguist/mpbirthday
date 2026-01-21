@@ -3,6 +3,10 @@ import random
 from SPARQLWrapper import SPARQLWrapper, JSON
 from atproto import Client, client_utils
 
+# Add your credentials here:
+client = Client()
+client.login("account", "password")
+
 def load_data(path="stammdaten.csv"):
     df = pd.read_csv(path)
     for col in ["geburtsdatum", "sterbedatum", "historie"]:
@@ -80,9 +84,6 @@ if row is None:
 skeet_text = build_skeet_text(row)
 article = get_wikipedia_article(f"{row['vorname']} {row['nachname']}")
 
-client = Client()
-client.login("mpbirthday.bsky.social", "happybirthday")
-
 tb = client_utils.TextBuilder().text(skeet_text)
 if article:
     tb = tb.link(article, article)
@@ -90,4 +91,3 @@ if article:
 client.send_post(tb)
 
 print(skeet_text, article)
-
