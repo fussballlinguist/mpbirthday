@@ -3,9 +3,9 @@ import random
 from SPARQLWrapper import SPARQLWrapper, JSON
 from atproto import Client, client_utils
 
-# Add your credentials here:
+# Add your credentials here
 client = Client()
-client.login("account", "password")
+client.login("handle", "password")
 
 def load_data(path="stammdaten.csv"):
     df = pd.read_csv(path)
@@ -47,8 +47,17 @@ def build_skeet_text(row):
             f"{'Wahlperioden' if row['anzahl_wp'] > 1 else 'Wahlperiode'} "
             "im Bundestag gewirkt.\n"
         )
+    elif "21" in row["wahlperioden"]:
+        body = f"{pron} wird {alter} Jahre alt.\n{congrats}\n"
+
     else:
-        body = f"{pron} wird {alter} Jahre alt.\n{congrats}"
+        body = (
+            f"{pron} wird {alter} Jahre alt.\n{congrats}\n"
+            f"{pron} hat ab {row['historie'].year} für "
+            f"{row['anzahl_wp']} "
+            f"{'Wahlperioden' if row['anzahl_wp'] > 1 else 'Wahlperiode'} "
+            "im Bundestag gewirkt.\n"
+        )            
 
     return "\n".join([header, body])
 
